@@ -15,8 +15,8 @@ app.use('/api', noteRouter)
 app.use('/api', diaryRouter)
 const PORT = process.env.PORT || 3000
 
-const MONGODB_URL = 'mongodb://127.0.0.1:27017/dafter-app-backend'
-
+// const MONGODB_URL = 'mongodb://127.0.0.1:27017/dafter-app-backend'
+const MONGODB_URL = 'mongodb+srv://ahmed-eid-dafter:eid199963@cluster0.h575og5.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose.connect(MONGODB_URL)
     .then(() => app.listen(PORT, () => console.log(`server is running on ${PORT} port`)))
