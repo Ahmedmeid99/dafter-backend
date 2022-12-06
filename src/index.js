@@ -12,7 +12,7 @@ app.use(express.json())
 app.use('/api', userRouter)
 app.use('/api', taskRouter)
 app.use('/api', noteRouter)
-app.use('/api', diaryRouter)
+app.use('/api', diaryRouter) 
 const PORT = process.env.PORT || 3000
 
 // const MONGODB_URL = 'mongodb://127.0.0.1:27017/dafter-app-backend'
