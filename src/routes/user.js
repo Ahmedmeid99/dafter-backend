@@ -1,6 +1,8 @@
 const express = require('express') // to create server & routes
 const jwt = require('jsonwebtoken') // to add unique token for evry user login
 const bcrypt = require('bcrypt')
+const multer = require('multer') //to upload files - images
+const sharp = require('sharp') // to resize images
 const User = require('../models/user')
 const auth = require('../middleware/auth')
 const router = new express.Router()
@@ -88,4 +90,87 @@ router.put('/users/me', auth, async (req, res) => {
         res.status(402).json({ error: e.message })
     }
 })
+///////////////////////////////////////////////////
+// create middleWare  to filtering img
+const avater = multer({
+    limits: {
+        fileSize: 1000000,
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an img'))
+        }
+        cb(undefined, true)
+    }
+})
+// add img to avater property in user
+router.post('/users/me/avater', auth, avater.single('avater'), async (req, res) => {
+    // const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
+    const buffer = req.file.buffer
+
+    req.user.avater = buffer
+    await req.user.save()
+    res.send({ status: 'ok' })
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+    next()
+})
+//delete avater (user img)
+router.delete('/users/me/avater', auth, avater.single('avater'), async (req, res) => {
+    req.user.avater = undefined
+    await req.user.save()
+    res.send({ status: 'ok' })
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+    next()
+})
+//read user avater
+router.get('/users/me/avater', auth, async (req, res) => {
+    try {
+        const user = req.user
+        if (!user || !user.avater) {
+            return res.status(400).send('user is not found or avater is not found')
+        }
+        res.set("Content-Type", "image/png")
+        res.send(user.avater)
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+///////////////////////////////////////////////////
+// add img to bgAvater property in user
+router.post('/users/me/bgAvater', auth, avater.single('bgAvater'), async (req, res) => {
+    // const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
+    const buffer = req.file.buffer
+
+    req.user.bgAvater = buffer
+    await req.user.save()
+    res.send({ status: 'ok' })
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+    next()
+})
+//delete bgAvater (user background img)
+router.delete('/users/me/bgAvater', auth, avater.single('bgAvater'), async (req, res) => {
+    req.user.bgAvater = undefined
+    await req.user.save()
+    res.send({ status: 'ok' })
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+    next()
+})
+//read user bgAvater
+router.get('/users/me/bgAvater', auth, async (req, res) => {
+    try {
+        const user = req.user
+        if (!user || !user.bgAvater) {
+            return res.status(400).send('user is not found or avater is not found')
+        }
+        res.set("Content-Type", "image/png")
+        res.send(user.bgAvater)
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+///////////////////////////////////////////////////
 module.exports = router

@@ -5,6 +5,7 @@ const userRouter = require('./routes/user')
 const taskRouter = require('./routes/task')
 const noteRouter = require('./routes/note')
 const diaryRouter = require('./routes/diary')
+const imageRouter = require('./routes/image')
 const app = express()
 
 app.use(cors()) // give us ability to access from frontend-code
@@ -12,7 +13,8 @@ app.use(express.json())
 app.use('/api', userRouter)
 app.use('/api', taskRouter)
 app.use('/api', noteRouter)
-app.use('/api', diaryRouter) 
+app.use('/api', diaryRouter)
+app.use('/api', imageRouter)
 const PORT = process.env.PORT || 3000
 
 // const MONGODB_URL = 'mongodb://127.0.0.1:27017/dafter-app-backend'

@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
             minlength: 7,
             trim: true,
         },
+        avater: {
+            type: Buffer,
+        }, bgAvater: {
+            type: Buffer,
+        },
         token: {
             type: String,
             required: false,
@@ -40,6 +45,11 @@ userSchema.virtual('notes', {
 })
 userSchema.virtual('diaries', {
     ref: 'Diary',
+    localField: '_id',
+    foreignField: 'owner'
+})
+userSchema.virtual('images', {
+    ref: 'Image',
     localField: '_id',
     foreignField: 'owner'
 })
