@@ -7,8 +7,12 @@ const noteRouter = require('./routes/note')
 const diaryRouter = require('./routes/diary')
 const imageRouter = require('./routes/image')
 const app = express()
-
+// fix access error
 app.use(cors()) // give us ability to access from frontend-code
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', "*")
+    next()
+})
 app.use(express.json())
 app.use('/api', userRouter)
 app.use('/api', taskRouter)
