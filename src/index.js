@@ -1,24 +1,21 @@
 const express = require('express') // to create server & routes
 const mongoose = require('mongoose') // to connect server with mongo
 const cors = require('cors')
+const corsAccess = require('./middleware/cors')
 const userRouter = require('./routes/user')
 const taskRouter = require('./routes/task')
 const noteRouter = require('./routes/note')
 const diaryRouter = require('./routes/diary')
 const imageRouter = require('./routes/image')
 const app = express()
-// fix access error
+
 app.use(cors()) // give us ability to access from frontend-code
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', "*")
-    next()
-})
 app.use(express.json())
-app.use('/api', userRouter)
-app.use('/api', taskRouter)
-app.use('/api', noteRouter)
-app.use('/api', diaryRouter)
-app.use('/api', imageRouter)
+app.use('/api', corsAccess, userRouter)
+app.use('/api', corsAccess, taskRouter)
+app.use('/api', corsAccess, noteRouter)
+app.use('/api', corsAccess, diaryRouter)
+app.use('/api', corsAccess, imageRouter)
 const PORT = process.env.PORT || 3000
 
 // const MONGODB_URL = 'mongodb://127.0.0.1:27017/dafter-app-backend'
